@@ -4,9 +4,10 @@ DEBUGFLAGS = -O0 -g
 RELEASEFLAGS = -flto -funroll-loops -fno-rtti -march=native -O3 -s
 
 FILES = main.cpp
-EXECUTABLE = brainfck_cpp.exe
+EXECUTABLE = brainfuck_cpp
 
 release:
+	cppcheck -q --enable=all --check-level=exhaustive --suppress=missingIncludeSystem --language=c++ --std=c++20 $(FILES)
 	$(MAIN_COMPILER) $(COMMONFLAGS) $(RELEASEFLAGS) -o $(EXECUTABLE) $(FILES)
 	strip --strip-all -R .comment -R .note $(EXECUTABLE)
 

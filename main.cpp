@@ -137,7 +137,7 @@ void execute_code(const std::vector<std::pair<char, int>>& code) {
   }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
   std::ios::sync_with_stdio(false);
 
   if (argc != 2) {

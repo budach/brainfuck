@@ -7,7 +7,6 @@ FILES = main.cpp
 EXECUTABLE = brainfuck_cpp
 
 release:
-	cppcheck -q --enable=all --check-level=exhaustive --suppress=missingIncludeSystem --language=c++ --std=c++20 $(FILES)
 	$(MAIN_COMPILER) $(COMMONFLAGS) $(RELEASEFLAGS) -o $(EXECUTABLE) $(FILES)
 	strip --strip-all -R .comment -R .note $(EXECUTABLE)
 

@@ -105,6 +105,9 @@ std::vector<std::pair<char, int>> simplify_opcodes(const std::string& code)
         exit(1);
     }
 
+    // add a termination instruction to avoid bounds checking in the main loop later
+    processed.emplace_back('!', 0);
+
     return processed;
 }
 
@@ -113,18 +116,16 @@ void execute_code(const std::vector<std::pair<char, int>>& code)
     std::vector<unsigned char> data(30000, 0);
     size_t data_ptr = 0;
     size_t instr_ptr = 0;
-    size_t code_length = code.size();
 
-    while (instr_ptr < code_length) {
+    while (1) {
         char command = code[instr_ptr].first;
-        int n = code[instr_ptr].second;
 
         if (command == '>') {
-            data_ptr += n;
+            data_ptr += code[instr_ptr].second;
         } else if (command == '+') {
-            data[data_ptr] = static_cast<unsigned char>(data[data_ptr] + n);
+            data[data_ptr] = static_cast<unsigned char>(data[data_ptr] + code[instr_ptr].second);
         } else if ((command == ']' && data[data_ptr] != 0) || (command == '[' && data[data_ptr] == 0)) {
-            instr_ptr = n;
+            instr_ptr = code[instr_ptr].second;
         } else if (command == 'Z') {
             data[data_ptr] = 0;
         } else if (command == '.') {
@@ -133,6 +134,8 @@ void execute_code(const std::vector<std::pair<char, int>>& code)
             char inp;
             std::cin.get(inp);
             data[data_ptr] = inp ? static_cast<unsigned char>(inp) : 0;
+        } else if (command == '!') {
+            break;
         }
 
         instr_ptr++;

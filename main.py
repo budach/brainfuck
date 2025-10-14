@@ -8,6 +8,7 @@ OPCODE_MAP = {
     "Z": 4,
     ".": 5,
     ",": 6,
+    "!": 7,
 }
 
 
@@ -75,6 +76,8 @@ def load_and_preprocess_code(file_name):
             processed_code.append((char, 1))
         i += 1
 
+    processed_code.append(("!", 1))  # termination command
+
     return processed_code
 
 
@@ -82,12 +85,11 @@ def execute_bf(code):
     data = [0] * 30000
     data_ptr = 0
     instr_ptr = 0
-    code_length = len(code)
 
     # if-else is still faster than match-case
     # matching order in if-else matters as well
     # matching enums or any kind of indirection is A LOT slower (just Python things)
-    while instr_ptr < code_length:
+    while True:
         command, n = code[instr_ptr]
 
         if command == 0:  # ">"
@@ -105,6 +107,8 @@ def execute_bf(code):
         elif command == 6:  # ","
             inp = sys.stdin.read(1)
             data[data_ptr] = ord(inp) if inp else 0
+        elif command == 7:  # "!"
+            break
 
         instr_ptr += 1
 

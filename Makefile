@@ -1,13 +1,14 @@
 MAIN_COMPILER = g++
-COMMONFLAGS = -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wpedantic -Wformat=2 -Winline -funsigned-char -pipe -std=c++20
-DEBUGFLAGS = -O0 -g
-RELEASEFLAGS = -flto -funroll-loops -fno-rtti -march=native -O3 -s
+COMMONFLAGS = -Wall -Wextra -Werror -Wshadow -Wdouble-promotion -Wpedantic -Wformat=2 -pipe -std=c++20
+DEBUGFLAGS = -O0 -g3
+RELEASEFLAGS = -flto=auto -march=native -mtune=native -O3 -DNDEBUG -fno-plt -fno-rtti
+LDFLAGS = -Wl,-O2,--as-needed,--gc-sections,--relax
 
 FILES = main.cpp
 EXECUTABLE = brainfuck_cpp
 
 release:
-	$(MAIN_COMPILER) $(COMMONFLAGS) $(RELEASEFLAGS) -o $(EXECUTABLE) $(FILES)
+	$(MAIN_COMPILER) $(COMMONFLAGS) $(RELEASEFLAGS) -o $(EXECUTABLE) $(FILES) $(LDFLAGS)
 	strip --strip-all -R .comment -R .note $(EXECUTABLE)
 
 debug:
